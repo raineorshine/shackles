@@ -90,9 +90,11 @@ describe('shackles', function() {
 
 		var spied = null
 
-		var C = shackles({
-			logger: function(value) {
-				spied = value * 2
+		var C = shackles({}, {
+			logger: {
+				log: function(value) {
+					spied = value * 2
+				}
 			}
 		})
 
