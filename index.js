@@ -26,7 +26,7 @@ function shackles(host) {
 				spyAll = x
 			}
 			else {
-				(f || container.logger.log)(value)
+				(x || container.logger.log)(value)
 			}
 
 			return container
