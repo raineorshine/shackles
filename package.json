@@ -1,0 +1,31 @@
+{
+  "name": "shackles",
+  "version": "0.0.0",
+  "description": "A tiny chaining library",
+  "license": "ISC",
+  "repository": "metaraine/shackles",
+  "author": {
+    "name": "Raine Lourie",
+    "email": "raine@collegecoding.com",
+    "url": "https://github.com/metaraine"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha",
+    "browser": "browserify -s $npm_package_name -o browser.js ."
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "chain",
+    "chaining"
+  ],
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "insist": "^0.2.3",
+    "browserify": "^7.0.0"
+  }
+}
