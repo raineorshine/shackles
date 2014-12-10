@@ -21,7 +21,10 @@
   ],
   "keywords": [
     "chain",
-    "chaining"
+    "chaining",
+    "method",
+    "spy",
+    "spying"
   ],
   "devDependencies": {
     "browserify": "^7.0.0",
