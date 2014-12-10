@@ -7,20 +7,20 @@ var _ = require('lodash')
 describe('shackles', function() {
 
 	it('should be able to set an initial value and retrieve it with .value()', function () {
-		var C = shackles({})
-		var result = C('test').value()
+		var chain = shackles({})
+		var result = chain('test').value()
 		assert.equal(result, 'test')
 	})
 
 	it('should default to empty object if no host object is provided', function () {
-		var C = shackles()
-		var result = C('test').value()
+		var chain = shackles()
+		var result = chain('test').value()
 		assert.equal(result, 'test')
 	})
 
 	it('should have a toString method that returns the string represention of the boxed value', function () {
-		var C = shackles()
-		var result = C('test').toString()
+		var chain = shackles()
+		var result = chain('test').toString()
 		assert.equal(result, 'test')
 	})
 
@@ -34,9 +34,9 @@ describe('shackles', function() {
 			}
 		}
 
-		var C = shackles(stringlib)
+		var chain = shackles(stringlib)
 
-		var result = C('Hello')
+		var result = chain('Hello')
 			.prepend('(')
 			.append('!', '?')
 			.append(')')
@@ -47,9 +47,9 @@ describe('shackles', function() {
 
 	it('should chain lodash', function () {
 
-		var C = shackles(_)
+		var chain = shackles(_)
 
-		var result = C([1,2,3])
+		var result = chain([1,2,3])
 			.map(function (x) { return x*x })
 			.filter(function (x) { return x > 2 })
 			.value()
@@ -59,11 +59,11 @@ describe('shackles', function() {
 
 	it('should override the boxed value with any scalar properties that are called as chained functions', function () {
 
-		var C = shackles({
+		var chain = shackles({
 			num: 10
 		})
 
-		var result = C('dummy')
+		var result = chain('dummy')
 			.num()
 			.value()
 
@@ -72,11 +72,11 @@ describe('shackles', function() {
 
 	it('should have a chainable spy function that passes the value to a function', function () {
 
-		var C = shackles()
+		var chain = shackles()
 
 		var spied = null
 
-		var result = C(10)
+		var result = chain(10)
 			.spy(function(value) {
 				spied = value * 2
 			})
@@ -88,11 +88,11 @@ describe('shackles', function() {
 
 	it('should override the boxed value with the value that the spy callback returns', function () {
 
-		var C = shackles()
+		var chain = shackles()
 
 		var spied = null
 
-		var result = C(10)
+		var result = chain(10)
 			.spy(function(value) {
 				return value/2
 			})
@@ -105,7 +105,7 @@ describe('shackles', function() {
 
 		var spied = null
 
-		var C = shackles({}, {
+		var chain = shackles({}, {
 			logger: {
 				log: function(value) {
 					spied = value * 2
@@ -113,7 +113,7 @@ describe('shackles', function() {
 			}
 		})
 
-		var result = C(10)
+		var result = chain(10)
 			.spy()
 			.value()
 
@@ -134,7 +134,7 @@ describe('shackles', function() {
 			}
 		}
 
-		var C = shackles(stringlib, {
+		var chain = shackles(stringlib, {
 			logger: {
 				log: function(value) {
 					history.push(value)
@@ -142,7 +142,7 @@ describe('shackles', function() {
 			}
 		})
 
-		var result = C('Hello')
+		var result = chain('Hello')
 			.spy(true)
 			.prepend('(')
 			.append('!', '?')

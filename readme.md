@@ -25,9 +25,9 @@ Add chaining to a library:
 		}
 	}
 
-	var C = shackles(stringlib)
+	var chain = shackles(stringlib)
 
-	var result = C('Hello')
+	var result = chain('Hello')
 		.prepend('(')
 		.append('!')
 		.append(')')
@@ -35,21 +35,21 @@ Add chaining to a library:
 
 If underscore didn't have chaining, we could easily add it:
 
-	var C = shackles(_)
+	var chain = shackles(_)
 
-	var result = C([1,2,3])
+	var result = chain([1,2,3])
 		.map(function (x) { return x*x })
 		.filter(function (x) { return x > 2 })
 		.value() // [4,9]
 
 Scalar properties become chainable methods that override the underlying value:
 
-	var C = shackles({
+	var chain = shackles({
 		inc: function(x) { return x+1 }
 		pi: 3.141592654
 	})
 
-	var result = C(0)
+	var result = chain(0)
 		.inc()
 		.inc()
 		.inc()
@@ -60,12 +60,12 @@ Scalar properties become chainable methods that override the underlying value:
 
 You can console.log the value at any point in the chain:
 
-	var C = shackles({
+	var chain = shackles({
 		inc: function(x) { return x+1 }
 		pi: 3.141592654
 	})
 
-	var result = C(10)
+	var result = chain(10)
 		.inc()
 		.spy() // 1
 		.inc()
@@ -77,11 +77,11 @@ You can console.log the value at any point in the chain:
 
 You can transform the value at any point in the chain:
 
-	var C = shackles(/*lib*/)
+	var chain = shackles(/*lib*/)
 
 	var spied = null
 
-	var result = C(10)
+	var result = chain(10)
 		.spy(function(value) {
 			return value * 2;
 		})
@@ -91,7 +91,7 @@ You can override the default spy logger with any log function:
 
 	var spied = null
 
-	var C = shackles({}, {
+	var chain = shackles({}, {
 		logger: {
 			log: function(value) {
 				spied = value * 2
@@ -99,7 +99,7 @@ You can override the default spy logger with any log function:
 		}
 	})
 
-	var result = C(10)
+	var result = chain(10)
 		.spy()
 		.value() // 20
 
@@ -116,7 +116,7 @@ You can enable/disable spying for longer periods of time:
 		}
 	}
 
-	var C = shackles(stringlib, {
+	var chain = shackles(stringlib, {
 		logger: {
 			log: function(value) {
 				history.push(value)
@@ -124,7 +124,7 @@ You can enable/disable spying for longer periods of time:
 		}
 	})
 
-	var result = C('Hello')
+	var result = chain('Hello')
 		.spy(true)
 		.prepend('(')
 		.append('!')
