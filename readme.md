@@ -52,20 +52,29 @@ Scalar properties become chainable methods that override the underlying value:
 	var result = chain(0)
 		.inc()
 		.inc()
-		.inc()
 		.num()
-		.value() // 3.141592654
+		.inc()
+		.value() // 4.141592654
 
 ## Spying
 
-You can console.log the value at any point in the chain:
+You can transform the value at any point in the chain:
+
+	var chain = shackles(/*lib*/)
+
+	var result = chain(10)
+		.spy(function(value) {
+			return value * 2;
+		})
+		.value() // 20
+
+The default spying method is `console.log`:
 
 	var chain = shackles({
 		inc: function(x) { return x+1 }
-		pi: 3.141592654
 	})
 
-	var result = chain(10)
+	var result = chain(0)
 		.inc()
 		.spy() // 1
 		.inc()
@@ -75,19 +84,7 @@ You can console.log the value at any point in the chain:
 		.value() // 4
 
 
-You can transform the value at any point in the chain:
-
-	var chain = shackles(/*lib*/)
-
-	var spied = null
-
-	var result = chain(10)
-		.spy(function(value) {
-			return value * 2;
-		})
-		.value() // 20
-
-You can override the default spy logger with any log function:
+You can override the default spying method with any log function:
 
 	var spied = null
 
@@ -101,9 +98,11 @@ You can override the default spy logger with any log function:
 
 	var result = chain(10)
 		.spy()
-		.value() // 20
+		.value() // 10
 
-You can enable/disable spying for longer periods of time:
+	console.log(spied) // 20
+
+You can enable/disable spying for longer sections of the chain:
 
 	var history = []
 
@@ -111,7 +110,7 @@ You can enable/disable spying for longer periods of time:
 		prepend: function(str, chr) {
 			return chr + str
 		},
-		append: function(str, chr)
+		append: function(str, chr) {
 			return str + chr
 		}
 	}
@@ -142,9 +141,6 @@ You can enable/disable spying for longer periods of time:
 		'(Hello!',
 		'(Hello!)'
 	]) */
-
-	assert.equal(result, '(Hello!?)')
-})
 ```
 
 
