@@ -10,6 +10,8 @@ function shackles(host) {
 	// a mutating value which the host function wrappers will have closure over
 	var value
 
+	var spyAll = false
+
 	// the chaining object that houses all the wrapped functions
 	var container = {
 		value: function() {
@@ -18,8 +20,15 @@ function shackles(host) {
 		toString: function() {
 			return value.toString()
 		},
-		spy: function(f) {
-			(f || container.logger.log)(value)
+		spy: function(x) {
+
+			if(typeof x === 'boolean') {
+				spyAll = x
+			}
+			else {
+				(f || container.logger.log)(value)
+			}
+
 			return container
 		},
 		logger: console
