@@ -5,6 +5,8 @@ function second (x,y) { return y }
 
 function shackles(host) {
 
+	host = host || {}
+
 	// a mutating value which the host function wrappers will have closure over
 	var value
 
@@ -15,7 +17,12 @@ function shackles(host) {
 		},
 		toString: function() {
 			return value.toString()
-		}
+		},
+		spy: function(f) {
+			(f || container.logger.log)(value)
+			return container
+		},
+		logger: console
 	}
 
 	// a wrapper function that invokes the host function with the mutator value as the first argument

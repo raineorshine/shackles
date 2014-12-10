@@ -12,6 +12,12 @@ describe('shackles', function() {
 		assert.equal(result, 'test')
 	})
 
+	it('should not break if no host is provided (default to empty object)', function () {
+		var C = shackles()
+		var result = C('test').value()
+		assert.equal(result, 'test')
+	})
+
 	it('should have a toString method that returns the string represention of the boxed value', function () {
 		var C = shackles({})
 		var result = C('test').toString()
@@ -51,7 +57,7 @@ describe('shackles', function() {
 		assert.deepEqual(result, [4, 9])
 	})
 
-	it('should handle scalar properties', function () {
+	it('should override the boxed value with any scalar properties that are called as chained functions', function () {
 
 		var C = shackles({
 			num: 10
@@ -61,7 +67,25 @@ describe('shackles', function() {
 			.num()
 			.value()
 
-		assert.deepEqual(result, 10)
+		assert.equal(result, 10)
 	})
 
+	it('should have a chainable spy function that passes the value to a function', function () {
+
+		var C = shackles({})
+
+		var spied = null
+
+		var result = C(10)
+			.spy(function(value) {
+				spied = value * 2
+			})
+			.value()
+
+		assert.equal(result, 10)
+		assert.equal(spied, 20)
+	})
+
+	it('should have a chainable spy function that uses an overrideable logger', function () {
+	})
 })
