@@ -141,7 +141,6 @@ You can enable/disable spying for longer sections of the chain:
 		'(Hello!',
 		'(Hello!)'
 	]) */
-```
 
 
 ## License
