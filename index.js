@@ -28,7 +28,10 @@ function shackles(host, options) {
 				spyAll = x
 			}
 			else {
-				(x || logger.log)(value)
+				var spyResult = (x || logger.log)(value)
+				if(spyResult !== undefined) {
+					value = spyResult
+				}
 			}
 
 			return container

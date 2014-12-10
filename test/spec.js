@@ -86,6 +86,22 @@ describe('shackles', function() {
 		assert.equal(spied, 20)
 	})
 
+	it('should override the boxed value with the value that the spy callback returns', function () {
+
+		var C = shackles({})
+
+		var spied = null
+
+		var result = C(10)
+			.spy(function(value) {
+				return value/2
+			})
+			.value()
+
+		assert.equal(result, 5)
+	})
+
+
 	it('should have a chainable spy function that uses an overrideable logger', function () {
 
 		var spied = null
