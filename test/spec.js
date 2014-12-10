@@ -87,5 +87,20 @@ describe('shackles', function() {
 	})
 
 	it('should have a chainable spy function that uses an overrideable logger', function () {
+
+		var spied = null
+
+		var C = shackles({
+			logger: function(value) {
+				spied = value * 2
+			}
+		})
+
+		var result = C(10)
+			.spy()
+			.value()
+
+		assert.equal(result, 10)
+		assert.equal(spied, 20)
 	})
 })
