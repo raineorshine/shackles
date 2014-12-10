@@ -12,6 +12,7 @@ function shackles(host, options) {
 	// a mutating value which the host function wrappers will have closure over
 	var value
 
+	// when enabled, all chained functions will invoke the logger
 	var spyAll = false
 
 	// the chaining object that houses all the wrapped functions
@@ -59,24 +60,35 @@ function shackles(host, options) {
 		}
 	}
 
-	// move each property from the host onto the container
-	for(var key in host) {
+	// helper method to add a value at the specified key to the container
+	function addToContainer(key, value) {
 
-		// protect the value property
-		if(key === 'value') {
-			console.warn('value is reserved for getting the result of the chain. The host object has value property which will be ignored.')
-			continue
-		}
+		var f = typeof value === 'function' ?
+			value :
+			id.bind(null, value)
 
-		// if the property value is not a function, wrap it in the identity function
-		var f = typeof host[key] === 'function' ?
-			host[key] :
-			id.bind(null, host[key])
-
-		container[key] = createMutator(f.bind(host))
+		container[key] = createMutator(f)
 	}
 
-	// return a function that can start the chain while setting an initial value
+	// copy each property from the host to the container as a chainable function with the same name
+	function addAllPropertiesToContainer() {
+
+		for(var key in host) {
+
+			// protect the value property
+			if(key in container) {
+				console.warn(key + ' is reserved. The host object\'s property will be ignored.')
+				continue
+			}
+
+			addToContainer(key, host[key])
+		}
+	}
+
+	// initialize
+	addAllPropertiesToContainer()
+
+	// return a function that can set an initial value and start the chain
 	return createMutator(second)
 }
 
