@@ -12,14 +12,14 @@ describe('shackles', function() {
 		assert.equal(result, 'test')
 	})
 
-	it('should not break if no host is provided (default to empty object)', function () {
+	it('should default to empty object if no host object is provided', function () {
 		var C = shackles()
 		var result = C('test').value()
 		assert.equal(result, 'test')
 	})
 
 	it('should have a toString method that returns the string represention of the boxed value', function () {
-		var C = shackles({})
+		var C = shackles()
 		var result = C('test').toString()
 		assert.equal(result, 'test')
 	})
@@ -72,7 +72,7 @@ describe('shackles', function() {
 
 	it('should have a chainable spy function that passes the value to a function', function () {
 
-		var C = shackles({})
+		var C = shackles()
 
 		var spied = null
 
@@ -88,7 +88,7 @@ describe('shackles', function() {
 
 	it('should override the boxed value with the value that the spy callback returns', function () {
 
-		var C = shackles({})
+		var C = shackles()
 
 		var spied = null
 
@@ -100,7 +100,6 @@ describe('shackles', function() {
 
 		assert.equal(result, 5)
 	})
-
 
 	it('should have a chainable spy function that uses an overrideable logger', function () {
 
@@ -121,4 +120,43 @@ describe('shackles', function() {
 		assert.equal(result, 10)
 		assert.equal(spied, 20)
 	})
+
+	it('should enable/disable spying on all chained functions', function () {
+
+		var history = []
+
+		var stringlib = {
+			prepend: function(str, chr, chr2) {
+				return (chr || '') + (chr2 || '') + str
+			},
+			append: function(str, chr, chr2) {
+				return str + (chr || '') + (chr2 || '')
+			}
+		}
+
+		var C = shackles(stringlib, {
+			logger: {
+				log: function(value) {
+					history.push(value)
+				}
+			}
+		})
+
+		var result = C('Hello')
+			.spy(true)
+			.prepend('(')
+			.append('!', '?')
+			.spy(false)
+			.append(')')
+			.value()
+
+		assert.deepEqual(history, [
+			'Hello',
+			'(Hello',
+			'(Hello!?',
+		])
+
+		assert.equal(result, '(Hello!?)')
+	})
+
 })

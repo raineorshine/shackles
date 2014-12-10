@@ -1,7 +1,7 @@
 {
   "name": "shackles",
   "version": "0.0.0",
-  "description": "A tiny chaining library",
+  "description": "Minimal chaining library with spying",
   "license": "ISC",
   "repository": "metaraine/shackles",
   "author": {

@@ -24,14 +24,20 @@ function shackles(host, options) {
 		},
 		spy: function(x) {
 
+			// as long as we're not just disabling spyAll, log the current value either with a given spy function or the default logger
+			if(x !== false) {
+				var log = typeof x === 'function' ? x : logger.log
+				var spyResult = log(value)
+			}
+
+			// if the spy function returned a value, override the boxed value
+			if(spyResult !== undefined) {
+				value = spyResult
+			}
+
+			// if a boolean was given, toggle spyAll
 			if(typeof x === 'boolean') {
 				spyAll = x
-			}
-			else {
-				var spyResult = (x || logger.log)(value)
-				if(spyResult !== undefined) {
-					value = spyResult
-				}
 			}
 
 			return container
@@ -45,6 +51,9 @@ function shackles(host, options) {
 		return function() {
 			var args = Array.prototype.concat.apply([value], [Array.prototype.slice.call(arguments)])
 			value = f.apply(null, args)
+			if(spyAll) {
+				container.spy()
+			}
 			// console.log('arguments', arguments, 'args', args, 'value', value)
 			return container
 		}
