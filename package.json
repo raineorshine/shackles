@@ -1,7 +1,7 @@
 {
   "name": "shackles",
   "version": "0.1.0",
-  "description": "Minimal chaining library with spying",
+  "description": "Minimal chaining library with tapping and logging",
   "license": "ISC",
   "repository": "metaraine/shackles",
   "author": {
@@ -23,6 +23,10 @@
     "chain",
     "chaining",
     "method",
+    "tap",
+    "tapping",
+    "log",
+    "logging",
     "spy",
     "spying"
   ],

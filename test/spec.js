@@ -70,93 +70,97 @@ describe('shackles', function() {
 		assert.equal(result, 10)
 	})
 
-	it('should have a chainable spy function that passes the value to a function', function () {
+	describe('tap', function() {
 
-		var chain = shackles()
+		it('should have a chainable tap function that passes the value to a function', function () {
 
-		var spied = null
+			var chain = shackles()
 
-		var result = chain(10)
-			.spy(function(value) {
-				spied = value * 2
-			})
-			.value()
+			var myval = null
 
-		assert.equal(result, 10)
-		assert.equal(spied, 20)
-	})
+			var result = chain(10)
+				.tap(function(value) {
+					myval = value * 2
+				})
+				.value()
 
-	it('should override the boxed value with the value that the spy callback returns', function () {
-
-		var chain = shackles()
-
-		var spied = null
-
-		var result = chain(10)
-			.spy(function(value) {
-				return value/2
-			})
-			.value()
-
-		assert.equal(result, 5)
-	})
-
-	it('should have a chainable spy function that uses an overrideable logger', function () {
-
-		var spied = null
-
-		var chain = shackles({}, {
-			logger: {
-				log: function(value) {
-					spied = value * 2
-				}
-			}
+			assert.equal(result, 10)
+			assert.equal(myval, 20)
 		})
 
-		var result = chain(10)
-			.spy()
-			.value()
+		it('should override the boxed value with the value that the tap callback returns', function () {
 
-		assert.equal(result, 10)
-		assert.equal(spied, 20)
+			var chain = shackles()
+
+			var result = chain(10)
+				.tap(function(value) {
+					return value/2
+				})
+				.value()
+
+			assert.equal(result, 5)
+		})
 	})
 
-	it('should enable/disable spying on all chained functions', function () {
+	describe('log', function() {
 
-		var history = []
+		it('should have a chainable log function that uses an overrideable logger', function () {
 
-		var stringlib = {
-			prepend: function(str, chr, chr2) {
-				return (chr || '') + (chr2 || '') + str
-			},
-			append: function(str, chr, chr2) {
-				return str + (chr || '') + (chr2 || '')
-			}
-		}
+			var spied = null
 
-		var chain = shackles(stringlib, {
-			logger: {
-				log: function(value) {
-					history.push(value)
+			var chain = shackles({}, {
+				logger: {
+					log: function(value) {
+						spied = value * 2
+					}
 				}
-			}
+			})
+
+			var result = chain(10)
+				.log()
+				.value()
+
+			assert.equal(result, 10)
+			assert.equal(spied, 20)
 		})
 
-		var result = chain('Hello')
-			.spy(true)
-			.prepend('(')
-			.append('!', '?')
-			.spy(false)
-			.append(')')
-			.value()
+		it('should enable/disable logging on all chained functions', function () {
 
-		assert.deepEqual(history, [
-			'Hello',
-			'(Hello',
-			'(Hello!?',
-		])
+			var history = []
 
-		assert.equal(result, '(Hello!?)')
+			var stringlib = {
+				prepend: function(str, chr, chr2) {
+					return (chr || '') + (chr2 || '') + str
+				},
+				append: function(str, chr, chr2) {
+					return str + (chr || '') + (chr2 || '')
+				}
+			}
+
+			var chain = shackles(stringlib, {
+				logger: {
+					log: function(value) {
+						history.push(value)
+					}
+				}
+			})
+
+			var result = chain('Hello')
+				.log(true)
+				.prepend('(')
+				.append('!', '?')
+				.log(false)
+				.append(')')
+				.value()
+
+			assert.deepEqual(history, [
+				'Hello',
+				'(Hello',
+				'(Hello!?',
+			])
+
+			assert.equal(result, '(Hello!?)')
+		})
 	})
 
 })

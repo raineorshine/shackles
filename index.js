@@ -3,17 +3,23 @@
 function id (x) { return x }
 function second (x,y) { return y }
 
+var deadLogger = {
+	log: function() {
+		throw new Error('Cannot log because console is not defined and no logger was provided.')
+	}
+}
+
 function shackles(host, options) {
 
 	host = host || {}
 	options = options || {}
-	var logger = options.logger || console
+	var logger = options.logger || (typeof console !== undefined ? console : deadLogger)
 
 	// a mutating value which the host function wrappers will have closure over
 	var value
 
 	// when enabled, all chained functions will invoke the logger
-	var spyAll = false
+	var logAll = false
 
 	// the chaining object that houses all the wrapped functions
 	var container = {
@@ -23,22 +29,22 @@ function shackles(host, options) {
 		toString: function() {
 			return value.toString()
 		},
-		spy: function(x) {
+		tap: function(f) {
+		  var result = f(value)
+		  if(result !== undefined) {
+		  	value = result
+		  }
+		  return container
+		},
+		log: function(enable) {
 
-			// as long as we're not just disabling spyAll, log the current value either with a given spy function or the default logger
-			if(x !== false) {
-				var log = typeof x === 'function' ? x : logger.log
-				var spyResult = log(value)
+			// if a flag was passed, toggle logging on all chain methods
+			if(enable !== undefined) {
+				logAll = enable
 			}
 
-			// if the spy function returned a value, override the boxed value
-			if(spyResult !== undefined) {
-				value = spyResult
-			}
-
-			// if a boolean was given, toggle spyAll
-			if(typeof x === 'boolean') {
-				spyAll = x
+			if(enable !== false || logAll) {
+				logger.log(value)
 			}
 
 			return container
@@ -52,8 +58,8 @@ function shackles(host, options) {
 		return function() {
 			var args = Array.prototype.concat.apply([value], [Array.prototype.slice.call(arguments)])
 			value = f.apply(null, args)
-			if(spyAll) {
-				container.spy()
+			if(logAll) {
+				container.log()
 			}
 			// console.log('arguments', arguments, 'args', args, 'value', value)
 			return container
