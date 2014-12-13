@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/metaraine/shackles.svg?branch=master)](https://travis-ci.org/metaraine/shackles)
 [![NPM version](https://badge.fury.io/js/shackles.svg)](http://badge.fury.io/js/shackles)
 
-> A minimal chaining library with spying
+> A minimal chaining library with tapping and logging
 
 
 ## Install
@@ -62,21 +62,24 @@ var result = chain(0)
 	.value() // 4.141592654
 ```
 
-## Spying
+## Tapping
 
 You can transform the value at any point in the chain:
 
 ```js
-var chain = shackles(/*lib*/)
+var chain = shackles(/* lib */)
 
 var result = chain(10)
-	.spy(function(value) {
+	.tap(function(value) {
 		return value * 2;
 	})
 	.value() // 20
 ```
 
-The default spying method is `console.log`:
+## Logging
+
+You can log the value at any point in the chain:
+The default logger method is `console`:
 
 ```js
 var chain = shackles({
@@ -85,36 +88,35 @@ var chain = shackles({
 
 var result = chain(0)
 	.inc()
-	.spy() // 1
+	.log() // 1
 	.inc()
-	.spy() // 2
+	.log() // 2
 	.inc()
 	.inc()
 	.value() // 4
 ```
 
-
-You can override the default spying method with any log function:
+You can override the default logger:
 
 ```js
-var spied = null
+var doubled = null
 
 var chain = shackles({}, {
 	logger: {
 		log: function(value) {
-			spied = value * 2
+			doubled = value * 2
 		}
 	}
 })
 
 var result = chain(10)
-	.spy()
+	.log()
 	.value() // 10
 
-console.log(spied) // 20
+console.log(doubled) // 20
 ```
 
-You can enable/disable spying for longer sections of the chain:
+You can enable/disable logging for longer sections of the chain:
 
 ```js
 var history = []
@@ -137,11 +139,11 @@ var chain = shackles(stringlib, {
 })
 
 var result = chain('Hello')
-	.spy(true)
+	.log(true)
 	.prepend('(')
 	.append('!')
 	.append(')')
-	.spy(false)
+	.log(false)
 	.append('?')
 	.append('?')
 	.append('?')

@@ -106,12 +106,12 @@ describe('shackles', function() {
 
 		it('should have a chainable log function that uses an overrideable logger', function () {
 
-			var spied = null
+			var doubled = null
 
 			var chain = shackles({}, {
 				logger: {
 					log: function(value) {
-						spied = value * 2
+						doubled = value * 2
 					}
 				}
 			})
@@ -121,7 +121,7 @@ describe('shackles', function() {
 				.value()
 
 			assert.equal(result, 10)
-			assert.equal(spied, 20)
+			assert.equal(doubled, 20)
 		})
 
 		it('should enable/disable logging on all chained functions', function () {
