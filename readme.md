@@ -57,7 +57,7 @@ var chain = shackles({
 var result = chain(0)
 	.inc()
 	.inc()
-	.num()
+	.pi()
 	.inc()
 	.value() // 4.141592654
 ```
